@@ -52,7 +52,6 @@ PRODUCT_PACKAGES += \
     audio.r_submix.default \
     audio.usb.default \
     suspend_blocker \
-    vndk-sp \
     tinyplay tinycap tinymix tinypcminfo
 
 USE_XML_AUDIO_POLICY_CONF := 1
