@@ -1,0 +1,12 @@
+# Everything lives on the SM32G microSD (8804000.mmc). androidboot.boot_devices
+# points at the SD controller and the RAM-test DT disables the internal UFS,
+# so no internal partition can be mounted or written.
+system		/system		erofs	ro	wait,logical,first_stage_mount
+vendor		/vendor		erofs	ro	wait,logical,first_stage_mount
+system_ext	/system_ext	erofs	ro	wait,logical,first_stage_mount
+product		/product	erofs	ro	wait,logical,first_stage_mount
+/dev/block/platform/soc@0/8804000.mmc/by-name/metadata	/metadata	ext4	noatime,nosuid,nodev,discard	wait,formattable,first_stage_mount,check
+/dev/block/platform/soc@0/8804000.mmc/by-name/userdata	/data		f2fs	nodev,noatime,nosuid,reserve_root=32768	latemount,wait,formattable,fileencryption=aes-256-xts:aes-256-cts:v2,keydirectory=/metadata/vold/metadata_encryption,quota,check
+/dev/block/platform/soc@0/8804000.mmc/by-name/misc	/misc		emmc	defaults	defaults
+/devices/platform/soc@0/a600000.usb/*/usb*	auto	auto	defaults	voldmanaged=usb1:auto
+/dev/block/zram0	none	swap	defaults	zramsize=50%
