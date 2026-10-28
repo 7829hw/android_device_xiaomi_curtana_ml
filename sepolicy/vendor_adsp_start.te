@@ -1,0 +1,6 @@
+# curtana-adsp-start.sh: starts the ADSP remoteproc once /vendor is mounted.
+type vendor_adsp_start, domain;
+type vendor_adsp_start_exec, exec_type, vendor_file_type, file_type;
+init_daemon_domain(vendor_adsp_start)
+allow vendor_adsp_start sysfs_remoteproc:dir r_dir_perms;
+allow vendor_adsp_start sysfs_remoteproc:file rw_file_perms;

@@ -58,6 +58,7 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/init.curtana_ml.remoteproc.rc:$(TARGET_COPY_OUT_VENDOR)/etc/init/init.curtana_ml.remoteproc.rc \
     $(LOCAL_PATH)/init.curtana_ml.modem.rc:$(TARGET_COPY_OUT_VENDOR)/etc/init/init.curtana_ml.modem.rc \
     $(LOCAL_PATH)/curtana-efs-readonly.sh:$(TARGET_COPY_OUT_VENDOR)/bin/curtana-efs-readonly.sh \
+    $(LOCAL_PATH)/curtana-adsp-start.sh:$(TARGET_COPY_OUT_VENDOR)/bin/curtana-adsp-start.sh \
     $(DRAGONBOARD)/ueventd.common.rc:$(TARGET_COPY_OUT_VENDOR)/etc/ueventd.rc \
     frameworks/base/data/keyboards/Generic.kl:$(TARGET_COPY_OUT_VENDOR)/usr/keylayout/curtana_ml.kl
 

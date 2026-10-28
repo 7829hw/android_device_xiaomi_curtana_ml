@@ -1,3 +1,0 @@
-# init.curtana_ml.remoteproc.rc starts the ADSP once /vendor/firmware exists.
-allow vendor_init sysfs_remoteproc:dir search;
-allow vendor_init sysfs_remoteproc:file w_file_perms;

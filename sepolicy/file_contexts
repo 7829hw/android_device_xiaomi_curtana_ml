@@ -79,3 +79,4 @@
 /(vendor|system/vendor)/bin/curtana-rmtfs	u:object_r:rmtfs_exec:s0
 /(vendor|system/vendor)/bin/curtana-tqftpserv	u:object_r:tqftpserv_exec:s0
 /(vendor|system/vendor)/bin/curtana-qrtr-lookup	u:object_r:qrtr_exec:s0
+/(vendor|system/vendor)/bin/curtana-adsp-start\.sh	u:object_r:vendor_adsp_start_exec:s0
