@@ -76,6 +76,22 @@ PRODUCT_COPY_FILES += \
     $(CURTANA_ML_QCOM)/bin/tqftpserv:$(TARGET_COPY_OUT_VENDOR)/bin/tqftpserv \
     $(CURTANA_ML_QCOM)/bin/qrtr-lookup:$(TARGET_COPY_OUT_VENDOR)/bin/qrtr-lookup
 
+# Wi-Fi: WCN3990 through ath10k (nl80211), as on dragonboard
+PRODUCT_PACKAGES += \
+    hostapd \
+    libwpa_client \
+    wpa_supplicant \
+    wpa_supplicant.conf \
+    wificond
+PRODUCT_VENDOR_PROPERTIES += \
+    wifi.interface=wlan0 \
+    wifi.supplicant_scan_interval=15
+PRODUCT_COPY_FILES += \
+    frameworks/native/data/etc/android.hardware.wifi.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.wifi.xml \
+    frameworks/native/data/etc/android.hardware.wifi.direct.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.wifi.direct.xml \
+    $(LOCAL_PATH)/wifi/wpa_supplicant_overlay.conf:$(TARGET_COPY_OUT_VENDOR)/etc/wifi/wpa_supplicant_overlay.conf \
+    $(LOCAL_PATH)/wifi/p2p_supplicant_overlay.conf:$(TARGET_COPY_OUT_VENDOR)/etc/wifi/p2p_supplicant_overlay.conf
+
 # HALs and services (software implementations from AOSP)
 PRODUCT_PACKAGES += \
     android.hardware.keymaster@3.0-impl \
