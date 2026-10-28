@@ -24,6 +24,7 @@
 #include <malloc.h>
 #include <pthread.h>
 #include <stdint.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <sys/time.h>
 #include <unistd.h>
@@ -84,18 +85,19 @@ static const char *get_input_route(audio_devices_t devices) {
                                                                              : "builtin-mic";
 }
 
+/* Find the first card with this PCM device node. The sm8250-machine front
+ * ends refuse hw_params until a mixer path connects a back end, so probing
+ * with pcm_params_get() fails before a route is applied. */
 static int get_audio_card(int direction, int port) {
-    struct pcm_params* params = NULL;
-    int card = 0;
+    char path[32];
 
-    while (!params && card < 8) {
-	/* Find the first input/output device that works */
-        params = pcm_params_get(card, port, direction);
-	card++;
+    for (int card = 0; card < 8; card++) {
+        snprintf(path, sizeof(path), "/dev/snd/pcmC%dD%d%c", card, port,
+                 direction == PCM_IN ? 'c' : 'p');
+        if (access(path, F_OK) == 0)
+            return card;
     }
-    pcm_params_free(params);
-
-    return card - 1;
+    return -1;
 }
 
 static void timestamp_adjust(struct timespec* ts, ssize_t frames, uint32_t sampling_rate) {
@@ -794,9 +796,7 @@ static int adev_open_output_stream(struct audio_hw_device *dev,
 
     struct alsa_audio_device *ladev = (struct alsa_audio_device *)dev;
     int out_port = get_audio_output_port(devices);
-    int out_card = get_audio_card(PCM_OUT, out_port);
-    struct pcm_params* params = pcm_params_get(out_card, out_port, PCM_OUT);
-    if (!params) {
+    if (get_audio_card(PCM_OUT, out_port) < 0) {
         return -ENOSYS;
     }
 
@@ -985,9 +985,7 @@ static int adev_open_input_stream(struct audio_hw_device* dev, audio_io_handle_t
 
     struct alsa_audio_device *ladev = (struct alsa_audio_device *)dev;
 
-    int in_card = get_audio_card(PCM_IN, PORT_MIC);
-    struct pcm_params* params = pcm_params_get(in_card, PORT_MIC, PCM_IN);
-    if (!params) {
+    if (get_audio_card(PCM_IN, PORT_MIC) < 0) {
         return -ENOSYS;
     }
 
