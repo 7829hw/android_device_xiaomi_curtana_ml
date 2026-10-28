@@ -42,12 +42,11 @@ BOARD_SUPER_PARTITION_GROUPS := curtana_ml_dynamic_partitions
 BOARD_CURTANA_ML_DYNAMIC_PARTITIONS_SIZE := 3217031168
 BOARD_CURTANA_ML_DYNAMIC_PARTITIONS_PARTITION_LIST := system vendor system_ext product
 
-# Graphics: drm_hwcomposer + minigbm_msm, software GLES (ANGLE/SwiftShader).
+# Graphics: drm_hwcomposer + minigbm_msm + prebuilt Mesa freedreno.
 include $(DRAGONBOARD)/shared/graphics/drm_hwcomposer/BoardConfig.mk
 BOARD_SEPOLICY_DIRS += \
     device/xiaomi/curtana_ml/sepolicy \
     $(DRAGONBOARD)/shared/utils/sdcard-boot/sepolicy \
-    $(DRAGONBOARD)/shared/graphics/swangle/sepolicy \
     $(DRAGONBOARD)/shared/graphics/minigbm_msm/sepolicy
 
 DEVICE_MANIFEST_FILE := $(DRAGONBOARD)/manifest.xml
