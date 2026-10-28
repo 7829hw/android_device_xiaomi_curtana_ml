@@ -1,0 +1,5 @@
+# The kernel tries to boot the ADSP at about 0.35 s, before first-stage init
+# has mounted /vendor, so the firmware load fails and the remoteproc stays
+# offline. Start it again once /vendor/firmware is available.
+on post-fs
+    write /sys/devices/platform/soc@0/62400000.remoteproc/remoteproc/remoteproc0/state start

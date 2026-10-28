@@ -20,6 +20,7 @@
 /sys/devices/platform/soc@0/4080000.remoteproc						u:object_r:sysfs_remoteproc:s0
 /sys/devices/platform/soc@0/8300000.remoteproc						u:object_r:sysfs_remoteproc:s0
 /sys/devices/platform/soc@0/17300000.remoteproc						u:object_r:sysfs_remoteproc:s0
+/sys/devices/platform/soc@0/62400000.remoteproc(/.*)?					u:object_r:sysfs_remoteproc:s0
 /sys/devices/platform/soc@0/ae00000.mdss						u:object_r:sysfs_gpu:s0
 /sys/devices/platform/soc@0/ae00000.display-subsystem					u:object_r:sysfs_gpu:s0
 
