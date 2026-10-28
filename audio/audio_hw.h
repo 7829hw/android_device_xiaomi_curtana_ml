@@ -22,9 +22,12 @@
 
 #include "fir_filter.h"
 
-#define PORT_HDMI 0
-#define PORT_INTERNAL_SPEAKER 1
-#define PORT_BUILTIN_MIC 3
+/* PCM devices of the curtana sm8250-machine card (ucm2/Xiaomi/miatoll):
+ * MultiMedia1 -> TERT_MI2S -> TAS2562 speaker, MultiMedia2 -> RX_CODEC_DMA_RX_0
+ * -> WCD937x headphones, TX_CODEC_DMA_TX_3 -> MultiMedia3 capture. */
+#define PORT_SPEAKER 0
+#define PORT_HEADPHONES 1
+#define PORT_MIC 2
 
 #define MIXER_XML_PATH "/vendor/etc/mixer_paths.xml"
 /* Minimum granularity - Arbitrary but small value */
@@ -94,6 +97,7 @@ struct alsa_stream_in {
     unsigned int frames_read;
     uint64_t timestamp_nsec;
     audio_source_t source;
+    const char *route;      /* mixer path applied while the PCM is open */
 };
 
 struct alsa_stream_out {
@@ -110,6 +114,7 @@ struct alsa_stream_out {
     unsigned int frames_written;
     struct timespec timestamp;
     fir_filter_t* speaker_eq;
+    const char *route;      /* mixer path applied while the PCM is open */
 };
 
 /* 'bytes' are the number of bytes written to audio FIFO, for which 'timestamp' is valid.

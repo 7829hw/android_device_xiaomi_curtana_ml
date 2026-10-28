@@ -32,3 +32,9 @@ rounded corners, status bar heights, navigation bar, power profile and
 general framework settings. Settings that need HALs this mainline bring-up
 does not have yet (light sensor, doze, double-tap wake, vendor color modes,
 power HAL, telephony/IMS) are left out.
+
+Audio: `audio/` is the dragonboard tinyalsa HAL (android-15.0.0_r32,
+57fc686a) built as `audio.primary.curtana_ml`. It opens PCM 0 (speaker,
+TAS2562), PCM 1 (headphones, WCD937x) or PCM 2 (microphones) and applies the
+matching path from `audio/mixer_paths.xml`, whose controls come from the
+miatoll-6.18 RAM-test script `miatoll/boot/audio-path`.

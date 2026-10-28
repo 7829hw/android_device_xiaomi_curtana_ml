@@ -70,8 +70,18 @@ static bool is_aec_input(const struct alsa_stream_in* in) {
 }
 
 static int get_audio_output_port(audio_devices_t devices) {
-    /* Only HDMI out for now #FIXME */
-    return PORT_HDMI;
+    if (devices & (AUDIO_DEVICE_OUT_WIRED_HEADSET | AUDIO_DEVICE_OUT_WIRED_HEADPHONE))
+        return PORT_HEADPHONES;
+    return PORT_SPEAKER;
+}
+
+static const char *get_output_route(int port) {
+    return port == PORT_HEADPHONES ? "headphones" : "speaker";
+}
+
+static const char *get_input_route(audio_devices_t devices) {
+    return (devices & ~AUDIO_DEVICE_BIT_IN) & AUDIO_DEVICE_IN_WIRED_HEADSET ? "headset-mic"
+                                                                             : "builtin-mic";
 }
 
 static int get_audio_card(int direction, int port) {
@@ -125,56 +135,6 @@ static int get_pcm_timestamp(struct pcm* pcm, uint32_t sample_rate, struct aec_i
     return ret;
 }
 
-static int read_filter_from_file(const char* filename, int16_t* filter, int max_length) {
-    FILE* fp = fopen(filename, "r");
-    if (fp == NULL) {
-        ALOGI("%s: File %s not found.", __func__, filename);
-        return 0;
-    }
-    int num_taps = 0;
-    char* line = NULL;
-    size_t len = 0;
-    while (!feof(fp)) {
-        size_t size = getline(&line, &len, fp);
-        if ((line[0] == '#') || (size < 2)) {
-            continue;
-        }
-        int n = sscanf(line, "%" SCNd16 "\n", &filter[num_taps++]);
-        if (n < 1) {
-            ALOGE("Could not find coefficient %d! Exiting...", num_taps - 1);
-            return 0;
-        }
-        ALOGV("Coeff %d : %" PRId16, num_taps, filter[num_taps - 1]);
-        if (num_taps == max_length) {
-            ALOGI("%s: max tap length %d reached.", __func__, max_length);
-            break;
-        }
-    }
-    free(line);
-    fclose(fp);
-    return num_taps;
-}
-
-static void out_set_eq(struct alsa_stream_out* out) {
-    out->speaker_eq = NULL;
-    int16_t* speaker_eq_coeffs = (int16_t*)calloc(SPEAKER_MAX_EQ_LENGTH, sizeof(int16_t));
-    if (speaker_eq_coeffs == NULL) {
-        ALOGE("%s: Failed to allocate speaker EQ", __func__);
-        return;
-    }
-    int num_taps = read_filter_from_file(SPEAKER_EQ_FILE, speaker_eq_coeffs, SPEAKER_MAX_EQ_LENGTH);
-    if (num_taps == 0) {
-        ALOGI("%s: Empty filter file or 0 taps set.", __func__);
-        free(speaker_eq_coeffs);
-        return;
-    }
-    out->speaker_eq = fir_init(
-            out->config.channels, FIR_SINGLE_FILTER, num_taps,
-            out_get_buffer_size(&out->stream.common) / out->config.channels / sizeof(int16_t),
-            speaker_eq_coeffs);
-    free(speaker_eq_coeffs);
-}
-
 /* must be called with hw device and output stream mutexes locked */
 static int start_output_stream(struct alsa_stream_out *out)
 {
@@ -191,6 +151,9 @@ static int start_output_stream(struct alsa_stream_out *out)
     int out_port = get_audio_output_port(out->devices);
     int out_card = get_audio_card(PCM_OUT, out_port);
 
+    out->route = get_output_route(out_port);
+    audio_route_apply_and_update_path(adev->audio_route, out->route);
+
     while (1) {
         out->pcm = pcm_open(out_card, out_port, PCM_OUT | PCM_MONOTONIC, &out->config);
         if ((out->pcm != NULL) && pcm_is_ready(out->pcm)) {
@@ -203,6 +166,8 @@ static int start_output_stream(struct alsa_stream_out *out)
             }
             if (--pcm_retry_count == 0) {
                 ALOGE("Failed to open pcm_out after %d tries", PCM_OPEN_RETRIES);
+                audio_route_reset_and_update_path(adev->audio_route, out->route);
+                out->route = NULL;
                 return -ENODEV;
             }
             usleep(PCM_OPEN_WAIT_TIME_MS * 1000);
@@ -268,6 +233,10 @@ static int do_output_standby(struct alsa_stream_out *out)
         adev->active_output = NULL;
         out->standby = 1;
     }
+    if (out->route) {
+        audio_route_reset_and_update_path(adev->audio_route, out->route);
+        out->route = NULL;
+    }
     aec_set_spk_running(adev->aec, false);
     return 0;
 }
@@ -309,6 +278,9 @@ static int out_set_parameters(struct audio_stream *stream, const char *kvpairs)
         pthread_mutex_lock(&adev->lock);
         pthread_mutex_lock(&out->lock);
         if (((out->devices & AUDIO_DEVICE_OUT_ALL) != val) && (val != 0)) {
+            /* Speaker and headphones are different PCMs: reopen on the next write. */
+            if (get_audio_output_port(out->devices) != get_audio_output_port(val))
+                do_output_standby(out);
             out->devices &= ~AUDIO_DEVICE_OUT_ALL;
             out->devices |= val;
         }
@@ -450,10 +422,13 @@ static int start_input_stream(struct alsa_stream_in *in)
     struct alsa_audio_device *adev = in->dev;
     in->unavailable = true;
     unsigned int pcm_retry_count = PCM_OPEN_RETRIES;
-    int in_card = get_audio_card(PCM_IN, PORT_BUILTIN_MIC);
+    int in_card = get_audio_card(PCM_IN, PORT_MIC);
+
+    in->route = get_input_route(in->devices);
+    audio_route_apply_and_update_path(adev->audio_route, in->route);
 
     while (1) {
-        in->pcm = pcm_open(in_card, PORT_BUILTIN_MIC, PCM_IN | PCM_MONOTONIC, &in->config);
+        in->pcm = pcm_open(in_card, PORT_MIC, PCM_IN | PCM_MONOTONIC, &in->config);
         if ((in->pcm != NULL) && pcm_is_ready(in->pcm)) {
             break;
         } else {
@@ -464,6 +439,8 @@ static int start_input_stream(struct alsa_stream_in *in)
             }
             if (--pcm_retry_count == 0) {
                 ALOGE("Failed to open pcm_in after %d tries", PCM_OPEN_RETRIES);
+                audio_route_reset_and_update_path(adev->audio_route, in->route);
+                in->route = NULL;
                 return -ENODEV;
             }
             usleep(PCM_OPEN_WAIT_TIME_MS * 1000);
@@ -578,6 +555,10 @@ static int do_input_standby(struct alsa_stream_in *in)
         in->pcm = NULL;
         adev->active_input = NULL;
         in->standby = true;
+    }
+    if (in->route) {
+        audio_route_reset_and_update_path(adev->audio_route, in->route);
+        in->route = NULL;
     }
     return 0;
 }
@@ -872,12 +853,6 @@ static int adev_open_output_stream(struct audio_hw_device *dev,
     config->sample_rate = out_get_sample_rate(&out->stream.common);
 
     out->speaker_eq = NULL;
-    if (out_port == PORT_INTERNAL_SPEAKER) {
-        out_set_eq(out);
-        if (out->speaker_eq == NULL) {
-            ALOGE("%s: Failed to initialize speaker EQ", __func__);
-        }
-    }
 
     int aec_ret = init_aec_reference_config(ladev->aec, out);
     if (aec_ret) {
@@ -1010,8 +985,8 @@ static int adev_open_input_stream(struct audio_hw_device* dev, audio_io_handle_t
 
     struct alsa_audio_device *ladev = (struct alsa_audio_device *)dev;
 
-    int in_card = get_audio_card(PCM_IN, PORT_BUILTIN_MIC);
-    struct pcm_params* params = pcm_params_get(in_card, PORT_BUILTIN_MIC, PCM_IN);
+    int in_card = get_audio_card(PCM_IN, PORT_MIC);
+    struct pcm_params* params = pcm_params_get(in_card, PORT_MIC, PCM_IN);
     if (!params) {
         return -ENOSYS;
     }
@@ -1045,7 +1020,10 @@ static int adev_open_input_stream(struct audio_hw_device* dev, audio_io_handle_t
     } else {
         in->config.rate = CAPTURE_CODEC_SAMPLING_RATE;
     }
-    in->config.format = PCM_FORMAT_S32_LE;
+    /* q6asm capture supports S16_LE and S24_LE only; the echo reference
+     * comes from the HAL's own FIFO and keeps its 32-bit format. */
+    in->config.format = source == AUDIO_SOURCE_ECHO_REFERENCE ? PCM_FORMAT_S32_LE
+                                                              : PCM_FORMAT_S16_LE;
     in->config.period_size = CAPTURE_PERIOD_SIZE;
     in->config.period_count = CAPTURE_PERIOD_COUNT;
 
@@ -1123,9 +1101,6 @@ static int adev_close(hw_device_t *device)
 static int adev_open(const hw_module_t* module, const char* name,
         hw_device_t** device)
 {
-    char vendor_hw[PROPERTY_VALUE_MAX] = {0};
-    // Prefix for the default audio out path, the board name is the suffix
-    char path_name[256] = "default_";
     ALOGV("adev_open: %s", name);
 
     if (strcmp(name, AUDIO_HARDWARE_INTERFACE) != 0) {
@@ -1175,14 +1150,6 @@ static int adev_open(const hw_module_t* module, const char* name,
         goto error_2;
     }
 
-    /*
-     * To support both the db845c and rb5 we need to used the right mixer path
-     * we do this by checking the hardware name. Which is set at boot time.
-     */
-    property_get("vendor.hw", vendor_hw, "db845c");
-    strlcat(path_name, vendor_hw, 256);
-    ALOGV("%s: Using mixer path: %s", __func__, path_name);
-    audio_route_apply_and_update_path(adev->audio_route, path_name);
 
     pthread_mutex_lock(&adev->lock);
     if (init_aec(CAPTURE_CODEC_SAMPLING_RATE, NUM_AEC_REFERENCE_CHANNELS,
