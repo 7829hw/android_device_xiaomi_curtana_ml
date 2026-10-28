@@ -35,7 +35,11 @@ AB_OTA_UPDATER := false
 
 # Super partition on the SD card
 BOARD_BUILD_SUPER_IMAGE_BY_DEFAULT := true
-BOARD_SUPER_PARTITION_METADATA_DEVICE := super
+# The SD partition is los_super (see fstab.curtana_ml); the metadata must not
+# name a "super" block device, which would resolve to the internal UFS.
+BOARD_SUPER_PARTITION_METADATA_DEVICE := los_super
+BOARD_SUPER_PARTITION_BLOCK_DEVICES := los_super
+BOARD_LOS_SUPER_DEVICE_SIZE := 6442450944
 BOARD_SUPER_PARTITION_SIZE := 6442450944
 BOARD_SUPER_PARTITION_GROUPS := curtana_ml_dynamic_partitions
 # Kept below half of super, as the partition size check requires.

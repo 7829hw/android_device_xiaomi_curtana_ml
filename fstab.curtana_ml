@@ -1,14 +1,17 @@
 # Everything lives on the SM32G microSD (8804000.mmc). androidboot.boot_devices
-# points at the SD controller and the RAM-test DT disables the internal UFS,
-# so no internal partition can be mounted or written. /data is not encrypted
+# points at the SD controller. The internal UFS is probed for the read-only
+# modem EFS only and carries partitions with the usual names (super, metadata,
+# userdata, misc); first-stage init matches required partitions by name on any
+# device, so the SD partitions are named los_* and androidboot.super_partition
+# is los_super. /data is not encrypted
 # for the bring-up: the AOSP keymaster 3.0 HAL used here is not usable by
 # keystore2, and init_user0 failed with file-based encryption.
 system		/system		erofs	ro	wait,logical,first_stage_mount
 vendor		/vendor		erofs	ro	wait,logical,first_stage_mount
 system_ext	/system_ext	erofs	ro	wait,logical,first_stage_mount
 product		/product	erofs	ro	wait,logical,first_stage_mount
-/dev/block/platform/soc@0/8804000.mmc/by-name/metadata	/metadata	ext4	noatime,nosuid,nodev,discard	wait,formattable,first_stage_mount,check
-/dev/block/platform/soc@0/8804000.mmc/by-name/userdata	/data		f2fs	nodev,noatime,nosuid,reserve_root=32768	latemount,wait,formattable,quota,check
-/dev/block/platform/soc@0/8804000.mmc/by-name/misc	/misc		emmc	defaults	defaults
+/dev/block/platform/soc@0/8804000.mmc/by-name/los_metadata	/metadata	ext4	noatime,nosuid,nodev,discard	wait,formattable,first_stage_mount,check
+/dev/block/platform/soc@0/8804000.mmc/by-name/los_userdata	/data		f2fs	nodev,noatime,nosuid,reserve_root=32768	latemount,wait,formattable,quota,check
+/dev/block/platform/soc@0/8804000.mmc/by-name/los_misc	/misc		emmc	defaults	defaults
 /devices/platform/soc@0/a600000.usb/*/usb*	auto	auto	defaults	voldmanaged=usb1:auto
 /dev/block/zram0	none	swap	defaults	zramsize=50%
