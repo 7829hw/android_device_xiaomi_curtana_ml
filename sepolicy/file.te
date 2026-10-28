@@ -1,0 +1,3 @@
+# The dragonboard set_udc policy reads /sys/class/udc through sysfs_udc, a type
+# that newer AOSP platform policy declares and LineageOS 22.2 does not.
+type sysfs_udc, fs_type, sysfs_type;

@@ -42,6 +42,7 @@ BOARD_CURTANA_ML_DYNAMIC_PARTITIONS_PARTITION_LIST := system vendor system_ext p
 # for the first boot; Mesa freedreno is the next step.
 include $(DRAGONBOARD)/shared/graphics/drm_hwcomposer/BoardConfig.mk
 BOARD_SEPOLICY_DIRS += \
+    device/xiaomi/curtana_ml/sepolicy \
     $(DRAGONBOARD)/sepolicy \
     $(DRAGONBOARD)/shared/utils/sdcard-boot/sepolicy \
     $(DRAGONBOARD)/shared/graphics/swangle/sepolicy \
