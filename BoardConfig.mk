@@ -42,8 +42,7 @@ BOARD_SUPER_PARTITION_GROUPS := curtana_ml_dynamic_partitions
 BOARD_CURTANA_ML_DYNAMIC_PARTITIONS_SIZE := 3217031168
 BOARD_CURTANA_ML_DYNAMIC_PARTITIONS_PARTITION_LIST := system vendor system_ext product
 
-# Graphics: drm_hwcomposer + minigbm_msm, software GLES (ANGLE/SwiftShader)
-# for the first boot; Mesa freedreno is the next step.
+# Graphics: drm_hwcomposer + minigbm_msm, software GLES (ANGLE/SwiftShader).
 include $(DRAGONBOARD)/shared/graphics/drm_hwcomposer/BoardConfig.mk
 BOARD_SEPOLICY_DIRS += \
     device/xiaomi/curtana_ml/sepolicy \
@@ -55,6 +54,3 @@ DEVICE_MANIFEST_FILE := $(DRAGONBOARD)/manifest.xml
 DEVICE_MATRIX_FILE := $(DRAGONBOARD)/compatibility_matrix.xml
 
 BUILD_BROKEN_ELF_PREBUILT_PRODUCT_COPY_FILES := true
-# The dragonboard graphics makefiles set ro.sf.lcd_density=160 for a 1080p
-# monitor; let the curtana panel value from device.mk (440) win.
-BUILD_BROKEN_DUP_SYSPROP := true

@@ -12,12 +12,40 @@ TARGET_HARDWARE := curtana_ml
 $(call inherit-product, $(SRC_TARGET_DIR)/product/emulated_storage.mk)
 $(call inherit-product, frameworks/native/build/phone-xhdpi-6144-dalvik-heap.mk)
 
-# Graphics
+# Graphics: drm_hwcomposer + minigbm_msm + software GLES (ANGLE on
+# SwiftShader). AOSP external/mesa3d does not build freedreno with Soong, so
+# Mesa for the Adreno 618 has to come in as a separately built prebuilt.
+# The dragonboard swangle makefile is not inherited because it sets
+# ro.sf.lcd_density=160 and persist.demo.rotationlock=1 for a landscape
+# monitor; its package and feature lists are repeated here instead.
 TARGET_USES_SWR := true
 $(call inherit-product, $(DRAGONBOARD)/shared/graphics/drm_hwcomposer/device.mk)
-$(call inherit-product, $(DRAGONBOARD)/shared/graphics/swangle/device.mk)
 $(call inherit-product, $(DRAGONBOARD)/shared/graphics/minigbm_msm/device.mk)
-PRODUCT_VENDOR_PROPERTIES += ro.sf.lcd_density=440
+
+PRODUCT_REQUIRES_INSECURE_EXECMEM_FOR_SWIFTSHADER := true
+PRODUCT_PACKAGES += \
+    libEGL_angle \
+    libGLESv1_CM_angle \
+    libGLESv2_angle \
+    vulkan.pastel
+
+PRODUCT_VENDOR_PROPERTIES += \
+    ro.sf.lcd_density=440 \
+    ro.hardware.egl=angle \
+    ro.hardware.vulkan=pastel \
+    ro.opengles.version=196608 \
+    debug.hwui.renderer=skiagl
+
+PRODUCT_COPY_FILES += \
+    frameworks/native/data/etc/android.hardware.opengles.aep.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.opengles.aep.xml \
+    frameworks/native/data/etc/android.software.opengles.deqp.level-2022-03-01.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.software.opengles.deqp.level.xml \
+    frameworks/native/data/etc/android.hardware.vulkan.compute-0.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.vulkan.compute.xml \
+    frameworks/native/data/etc/android.hardware.vulkan.level-1.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.vulkan.level.xml \
+    frameworks/native/data/etc/android.hardware.vulkan.version-1_1.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.vulkan.version.xml \
+    frameworks/native/data/etc/android.software.vulkan.deqp.level-2021-03-01.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.software.vulkan.deqp.level.xml
+
+TARGET_VULKAN_SUPPORT := true
+TARGET_USES_VULKAN := true
 
 # Storage and init
 PRODUCT_COPY_FILES += \
