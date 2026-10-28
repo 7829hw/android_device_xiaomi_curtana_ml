@@ -10,13 +10,13 @@ service vendor.efs-readonly /vendor/bin/curtana-efs-readonly.sh
     disabled
     oneshot
 
-service tqftpserv /vendor/bin/tqftpserv
+service vendor.tqftpserv /vendor/bin/curtana-tqftpserv
     class core
     user root
     group system
     disabled
 
-service rmtfs /vendor/bin/rmtfs -o /dev/block/rmtfs -P -r -s
+service vendor.rmtfs /vendor/bin/curtana-rmtfs -o /dev/block/rmtfs -P -r -s
     class core
     user root
     group system
@@ -33,8 +33,8 @@ on post-fs-data
     mkdir /data/vendor/readonly/firmware/image 0770 root system
 
 on post-fs-data && property:vendor.curtana.efs_readonly=1
-    start tqftpserv
-    start rmtfs
+    start vendor.tqftpserv
+    start vendor.rmtfs
 
 on shutdown
-    stop rmtfs
+    stop vendor.rmtfs

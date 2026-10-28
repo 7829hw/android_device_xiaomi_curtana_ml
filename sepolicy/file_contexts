@@ -76,3 +76,6 @@
 /sys/devices/platform/soc@0/ac0000\.geniqup/a94000\.spi/spi_master/spi11/spi11\.0/double_tap_enable	u:object_r:sysfs_touch_dt2w:s0
 /(vendor|system/vendor)/bin/hw/android\.hardware\.power-service\.curtana_ml	u:object_r:hal_power_default_exec:s0
 /(vendor|system/vendor)/bin/curtana-efs-readonly\.sh	u:object_r:vendor_efs_readonly_exec:s0
+/(vendor|system/vendor)/bin/curtana-rmtfs	u:object_r:rmtfs_exec:s0
+/(vendor|system/vendor)/bin/curtana-tqftpserv	u:object_r:tqftpserv_exec:s0
+/(vendor|system/vendor)/bin/curtana-qrtr-lookup	u:object_r:qrtr_exec:s0

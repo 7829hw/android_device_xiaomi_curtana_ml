@@ -70,11 +70,13 @@ PRODUCT_COPY_FILES += \
 
 # Qualcomm file services for the modem, cross-built from the pinned RAM-test
 # sources by build_qcom_services_android.sh (android/lineage-tools); not in Git.
+# They get their own names: the dragonboard tree also defines rmtfs,
+# tqftpserv and qrtr modules (upstream rmtfs writes to the EFS).
 CURTANA_ML_QCOM := vendor/xiaomi/curtana_ml-qcom
 PRODUCT_COPY_FILES += \
-    $(CURTANA_ML_QCOM)/bin/rmtfs:$(TARGET_COPY_OUT_VENDOR)/bin/rmtfs \
-    $(CURTANA_ML_QCOM)/bin/tqftpserv:$(TARGET_COPY_OUT_VENDOR)/bin/tqftpserv \
-    $(CURTANA_ML_QCOM)/bin/qrtr-lookup:$(TARGET_COPY_OUT_VENDOR)/bin/qrtr-lookup
+    $(CURTANA_ML_QCOM)/bin/rmtfs:$(TARGET_COPY_OUT_VENDOR)/bin/curtana-rmtfs \
+    $(CURTANA_ML_QCOM)/bin/tqftpserv:$(TARGET_COPY_OUT_VENDOR)/bin/curtana-tqftpserv \
+    $(CURTANA_ML_QCOM)/bin/qrtr-lookup:$(TARGET_COPY_OUT_VENDOR)/bin/curtana-qrtr-lookup
 
 # Wi-Fi: WCN3990 through ath10k (nl80211), as on dragonboard
 PRODUCT_PACKAGES += \
