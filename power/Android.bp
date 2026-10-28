@@ -22,7 +22,7 @@ cc_binary {
     defaults: ["android.hardware.power-ndk_shared"],
     relative_install_path: "hw",
     init_rc: ["power-curtana_ml.rc"],
-    vintf_fragments: ["power-default.xml"],
+    vintf_fragments: ["power-curtana_ml.xml"],
     vendor: true,
     shared_libs: [
         "android.hardware.common-V2-ndk",
