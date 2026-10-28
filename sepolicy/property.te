@@ -1,0 +1,4 @@
+# vendor.usb.controller, from the dragonboard set_udc policy. Here the vendor
+# init file sets it directly (init.curtana_ml.usb.rc).
+vendor_public_prop(vendor_usb_prop)
+set_prop(vendor_init, vendor_usb_prop)
