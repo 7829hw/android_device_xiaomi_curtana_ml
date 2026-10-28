@@ -6,3 +6,4 @@ type dri_device, dev_type;
 type rmtfs_device, dev_type;
 type modem_block_device, dev_type;
 type tqftpserv_vendor_data_file, file_type, data_file_type, mlstrustedobject;
+type sysfs_touch_dt2w, fs_type, sysfs_type;

@@ -73,7 +73,7 @@ PRODUCT_PACKAGES += \
     android.hardware.gatekeeper@1.0-service.software \
     com.google.cf.health \
     com.android.hardware.thermal \
-    android.hardware.power-service.example \
+    android.hardware.power-service.curtana_ml \
     android.hardware.light-service.lineage \
     android.hardware.audio.service \
     android.hardware.audio@7.0-impl \

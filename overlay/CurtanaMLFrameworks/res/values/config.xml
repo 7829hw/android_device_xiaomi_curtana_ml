@@ -6,7 +6,7 @@
      Selected from LineageOS android_device_xiaomi_sm6250-common (lineage-22.2,
      45b3b7dab47ac792be975fb7623f03268c4a6dc2), overlay/SM6250Frameworks.
      Left out until the hardware has HALs on mainline: light-sensor
-     auto-brightness and doze, double-tap wake, vendor color modes, power
+     auto-brightness and doze, vendor color modes, power
      HAL decoupling, and the telephony, IMS and network settings.
 -->
 
@@ -101,6 +101,9 @@
          The user is forbidden from setting the brightness below this level.
          Equivalent to 1/255. -->
     <item name="config_screenBrightnessSettingMinimumFloat" format="float" type="dimen">0.0</item>
+
+    <!-- Whether device supports double tap to wake -->
+    <bool name="config_supportDoubleTapWake">true</bool>
 
     <!-- Whether a software navigation bar should be shown. NOTE: in the future this may be
          autodetected from the Configuration. -->

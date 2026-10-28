@@ -17,6 +17,7 @@
 #include "Power.h"
 #include "PowerHintSession.h"
 
+#include <android-base/file.h>
 #include <android-base/logging.h>
 #include <fmq/AidlMessageQueue.h>
 #include <fmq/EventFlag.h>
@@ -41,6 +42,11 @@ using ndk::ScopedAStatus;
 
 const std::vector<Boost> BOOST_RANGE{ndk::enum_range<Boost>().begin(),
                                      ndk::enum_range<Boost>().end()};
+// FT8756 double tap to wake (miatoll-6.18 drivers/input/touchscreen/ft8756.c).
+static const char kDoubleTapNode[] =
+        "/sys/devices/platform/soc@0/ac0000.geniqup/a94000.spi/spi_master/spi11/spi11.0/"
+        "double_tap_enable";
+
 const std::vector<Mode> MODE_RANGE{ndk::enum_range<Mode>().begin(), ndk::enum_range<Mode>().end()};
 
 template <class T>
@@ -50,6 +56,10 @@ constexpr size_t enum_size() {
 
 ScopedAStatus Power::setMode(Mode type, bool enabled) {
     LOG(VERBOSE) << "Power setMode: " << static_cast<int32_t>(type) << " to: " << enabled;
+    if (type == Mode::DOUBLE_TAP_TO_WAKE &&
+        !::android::base::WriteStringToFile(enabled ? "1" : "0", kDoubleTapNode)) {
+        PLOG(ERROR) << "Failed to write " << kDoubleTapNode;
+    }
     return ScopedAStatus::ok();
 }
 
