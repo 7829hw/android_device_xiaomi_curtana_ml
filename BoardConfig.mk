@@ -51,3 +51,6 @@ DEVICE_MANIFEST_FILE := $(DRAGONBOARD)/manifest.xml
 DEVICE_MATRIX_FILE := $(DRAGONBOARD)/compatibility_matrix.xml
 
 BUILD_BROKEN_ELF_PREBUILT_PRODUCT_COPY_FILES := true
+# The dragonboard graphics makefiles set ro.sf.lcd_density=160 for a 1080p
+# monitor; let the curtana panel value from device.mk (440) win.
+BUILD_BROKEN_DUP_SYSPROP := true
