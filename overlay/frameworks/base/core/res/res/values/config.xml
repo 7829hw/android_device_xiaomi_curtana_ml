@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- curtana has no hardware navigation keys; show the on-screen navigation bar. -->
+<resources>
+    <bool name="config_showNavigationBar">true</bool>
+</resources>

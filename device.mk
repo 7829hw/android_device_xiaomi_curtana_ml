@@ -44,6 +44,9 @@ PRODUCT_COPY_FILES += \
 
 TARGET_USES_VULKAN := true
 
+# Resource overlays
+DEVICE_PACKAGE_OVERLAYS += $(LOCAL_PATH)/overlay
+
 # Storage and init
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/fstab.curtana_ml:$(TARGET_COPY_OUT_RAMDISK)/first_stage_ramdisk/fstab.curtana_ml \
