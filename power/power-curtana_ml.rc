@@ -1,0 +1,9 @@
+on early-boot
+    # FT8756 double tap to wake (miatoll-6.18 drivers/input/touchscreen/ft8756.c)
+    chown system system /sys/devices/platform/soc@0/ac0000.geniqup/a94000.spi/spi_master/spi11/spi11.0/double_tap_enable
+    chmod 0660 /sys/devices/platform/soc@0/ac0000.geniqup/a94000.spi/spi_master/spi11/spi11.0/double_tap_enable
+
+service vendor.power-default /vendor/bin/hw/android.hardware.power-service.curtana_ml
+    class hal
+    user system
+    group system
