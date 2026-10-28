@@ -30,12 +30,16 @@ BOARD_F2FS_BLOCKSIZE := 4096
 BOARD_FLASH_BLOCK_SIZE := 4096
 BOARD_USES_METADATA_PARTITION := true
 
+# Non-A/B: one slot, no update_engine slots on the SD card.
+AB_OTA_UPDATER := false
+
 # Super partition on the SD card
 BOARD_BUILD_SUPER_IMAGE_BY_DEFAULT := true
 BOARD_SUPER_PARTITION_METADATA_DEVICE := super
 BOARD_SUPER_PARTITION_SIZE := 6442450944
 BOARD_SUPER_PARTITION_GROUPS := curtana_ml_dynamic_partitions
-BOARD_CURTANA_ML_DYNAMIC_PARTITIONS_SIZE := 6438256640
+# Kept below half of super, as the partition size check requires.
+BOARD_CURTANA_ML_DYNAMIC_PARTITIONS_SIZE := 3217031168
 BOARD_CURTANA_ML_DYNAMIC_PARTITIONS_PARTITION_LIST := system vendor system_ext product
 
 # Graphics: drm_hwcomposer + minigbm_msm, software GLES (ANGLE/SwiftShader)
