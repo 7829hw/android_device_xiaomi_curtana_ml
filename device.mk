@@ -56,6 +56,8 @@ PRODUCT_COPY_FILES += \
     $(DRAGONBOARD)/init.common.rc:$(TARGET_COPY_OUT_VENDOR)/etc/init/init.curtana_ml.rc \
     $(LOCAL_PATH)/init.curtana_ml.usb.rc:$(TARGET_COPY_OUT_VENDOR)/etc/init/init.curtana_ml.usb.rc \
     $(LOCAL_PATH)/init.curtana_ml.remoteproc.rc:$(TARGET_COPY_OUT_VENDOR)/etc/init/init.curtana_ml.remoteproc.rc \
+    $(LOCAL_PATH)/init.curtana_ml.modem.rc:$(TARGET_COPY_OUT_VENDOR)/etc/init/init.curtana_ml.modem.rc \
+    $(LOCAL_PATH)/curtana-efs-readonly.sh:$(TARGET_COPY_OUT_VENDOR)/bin/curtana-efs-readonly.sh \
     $(DRAGONBOARD)/ueventd.common.rc:$(TARGET_COPY_OUT_VENDOR)/etc/ueventd.rc \
     frameworks/base/data/keyboards/Generic.kl:$(TARGET_COPY_OUT_VENDOR)/usr/keylayout/curtana_ml.kl
 
@@ -65,6 +67,14 @@ PRODUCT_COPY_FILES += \
 CURTANA_ML_FIRMWARE := vendor/xiaomi/curtana_ml-firmware
 PRODUCT_COPY_FILES += \
     $(call find-copy-subdir-files,*,$(CURTANA_ML_FIRMWARE)/firmware,$(TARGET_COPY_OUT_VENDOR)/firmware)
+
+# Qualcomm file services for the modem, cross-built from the pinned RAM-test
+# sources by build_qcom_services_android.sh (android/lineage-tools); not in Git.
+CURTANA_ML_QCOM := vendor/xiaomi/curtana_ml-qcom
+PRODUCT_COPY_FILES += \
+    $(CURTANA_ML_QCOM)/bin/rmtfs:$(TARGET_COPY_OUT_VENDOR)/bin/rmtfs \
+    $(CURTANA_ML_QCOM)/bin/tqftpserv:$(TARGET_COPY_OUT_VENDOR)/bin/tqftpserv \
+    $(CURTANA_ML_QCOM)/bin/qrtr-lookup:$(TARGET_COPY_OUT_VENDOR)/bin/qrtr-lookup
 
 # HALs and services (software implementations from AOSP)
 PRODUCT_PACKAGES += \

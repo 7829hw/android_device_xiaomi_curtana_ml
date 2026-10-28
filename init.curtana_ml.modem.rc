@@ -1,0 +1,40 @@
+# Modem (MPSS) for Wi-Fi: rmtfs serves the EFS partitions read-only with RAM
+# shadows (miatoll-6.18 RAM-test variant) and starts the modem remoteproc
+# (-s) once ready; tqftpserv serves its firmware files from /vendor/firmware.
+# The kernel provides the QRTR name service and the PD mapper.
+
+service vendor.efs-readonly /vendor/bin/curtana-efs-readonly.sh
+    class core
+    user root
+    group system
+    disabled
+    oneshot
+
+service tqftpserv /vendor/bin/tqftpserv
+    class core
+    user root
+    group system
+    disabled
+
+service rmtfs /vendor/bin/rmtfs -o /dev/block/rmtfs -P -r -s
+    class core
+    user root
+    group system
+    disabled
+
+on init
+    exec_start vendor.efs-readonly
+
+on post-fs-data
+    mkdir /data/vendor/tmp 0770 root system
+    mkdir /data/vendor/readwrite 0770 root system
+    mkdir /data/vendor/readonly 0770 root system
+    mkdir /data/vendor/readonly/firmware 0770 root system
+    mkdir /data/vendor/readonly/firmware/image 0770 root system
+
+on post-fs-data && property:vendor.curtana.efs_readonly=1
+    start tqftpserv
+    start rmtfs
+
+on shutdown
+    stop rmtfs

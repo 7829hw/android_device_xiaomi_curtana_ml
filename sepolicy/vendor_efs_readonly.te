@@ -1,0 +1,5 @@
+# curtana-efs-readonly.sh: marks the UFS block devices read-only and links
+# the modem EFS partitions for rmtfs.
+type vendor_efs_readonly, domain;
+type vendor_efs_readonly_exec, exec_type, vendor_file_type, file_type;
+init_daemon_domain(vendor_efs_readonly)
