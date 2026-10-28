@@ -24,9 +24,8 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/fstab.curtana_ml:$(TARGET_COPY_OUT_RAMDISK)/first_stage_ramdisk/fstab.curtana_ml \
     $(LOCAL_PATH)/fstab.curtana_ml:$(TARGET_COPY_OUT_VENDOR)/etc/fstab.curtana_ml \
     $(DRAGONBOARD)/init.common.rc:$(TARGET_COPY_OUT_VENDOR)/etc/init/init.curtana_ml.rc \
-    $(DRAGONBOARD)/init.common.usb.rc:$(TARGET_COPY_OUT_VENDOR)/etc/init/init.curtana_ml.usb.rc \
+    $(LOCAL_PATH)/init.curtana_ml.usb.rc:$(TARGET_COPY_OUT_VENDOR)/etc/init/init.curtana_ml.usb.rc \
     $(DRAGONBOARD)/ueventd.common.rc:$(TARGET_COPY_OUT_VENDOR)/etc/ueventd.rc \
-    $(DRAGONBOARD)/shared/utils/set_udc.sh:$(TARGET_COPY_OUT_VENDOR)/bin/set_udc.sh \
     frameworks/base/data/keyboards/Generic.kl:$(TARGET_COPY_OUT_VENDOR)/usr/keylayout/curtana_ml.kl
 
 # Firmware loaded by the 6.18 kernel (firmware_class.path=/vendor/firmware/).
