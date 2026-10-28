@@ -24,3 +24,11 @@ Workflow: edit here on the WSL host, commit, `git push buildhost lineage-22.2`,
 then build on the build host with `build_lineage_remote.sh` from the separate
 `android/lineage-tools` repository, which
 checks out the pushed commit into `lineage/device/xiaomi/curtana_ml`.
+
+Overlays: `overlay/CurtanaMLFrameworks` and `overlay/CurtanaMLSystemUI` are
+taken from LineageOS `android_device_xiaomi_sm6250-common` (lineage-22.2,
+45b3b7dab47ac792be975fb7623f03268c4a6dc2), Apache-2.0: display cutout,
+rounded corners, status bar heights, navigation bar, power profile and
+general framework settings. Settings that need HALs this mainline bring-up
+does not have yet (light sensor, doze, double-tap wake, vendor color modes,
+power HAL, telephony/IMS) are left out.

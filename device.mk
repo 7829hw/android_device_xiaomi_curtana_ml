@@ -44,8 +44,10 @@ PRODUCT_COPY_FILES += \
 
 TARGET_USES_VULKAN := true
 
-# Resource overlays
-DEVICE_PACKAGE_OVERLAYS += $(LOCAL_PATH)/overlay
+# Resource overlays, selected from the official LineageOS sm6250-common tree.
+PRODUCT_PACKAGES += \
+    CurtanaMLFrameworks \
+    CurtanaMLSystemUI
 
 # Storage and init
 PRODUCT_COPY_FILES += \
