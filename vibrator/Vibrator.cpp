@@ -112,10 +112,12 @@ class Vibrator : public BnVibrator {
                           const std::shared_ptr<IVibratorCallback>& cb, int32_t* ms) override {
         int32_t duration = effectDuration(effect);
         if (!duration) return unsupported();
+        // Each strength doubles the waveform gain: the 6 dB steps of the
+        // light/medium/strong levels are hardly felt on the curtana LRA.
         float scale;
         switch (strength) {
-            case EffectStrength::LIGHT: scale = 0.5f; break;
-            case EffectStrength::MEDIUM: scale = 0.75f; break;
+            case EffectStrength::LIGHT: scale = 0.25f; break;
+            case EffectStrength::MEDIUM: scale = 0.5f; break;
             case EffectStrength::STRONG: scale = 1.0f; break;
             default: return unsupported();
         }
