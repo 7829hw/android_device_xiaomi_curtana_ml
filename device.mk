@@ -56,7 +56,8 @@ PRODUCT_COPY_FILES += \
     $(call find-copy-subdir-files,*,$(CURTANA_ML_LIBCAMERA)/bin,$(TARGET_COPY_OUT_VENDOR)/bin) \
     $(call find-copy-subdir-files,*,$(CURTANA_ML_LIBCAMERA)/share,$(TARGET_COPY_OUT_VENDOR)/share) \
     frameworks/native/data/etc/android.hardware.camera.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.camera.xml \
-    frameworks/native/data/etc/android.hardware.camera.front.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.camera.front.xml
+    frameworks/native/data/etc/android.hardware.camera.front.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.camera.front.xml \
+    $(LOCAL_PATH)/camera/camera_hal.yaml:$(TARGET_COPY_OUT_VENDOR)/etc/libcamera/camera_hal.yaml
 
 PRODUCT_PACKAGES += \
     android.hardware.camera.provider-service.lineage

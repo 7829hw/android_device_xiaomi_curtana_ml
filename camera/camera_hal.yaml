@@ -1,0 +1,12 @@
+# libcamera Android HAL configuration (vendor/etc/libcamera/camera_hal.yaml).
+# Internal cameras are listed by their libcamera ID (DT path). Rotations are
+# the sensor mounting angles of the downstream curtana camera DT
+# (sensor-position-roll). The ultra-wide (OV8856) and macro (S5K5E9) cameras
+# are left out for now: Android apps use the first back and front camera.
+cameras:
+  "/base/soc@0/cci@ac4a000/i2c-bus@0/s5kgm2@10":
+    location: back
+    rotation: 90
+  "/base/soc@0/cci@ac4b000/i2c-bus@0/ov16a1q@10":
+    location: front
+    rotation: 270
