@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     SPDX-FileCopyrightText: The LineageOS Project
+     SPDX-License-Identifier: Apache-2.0
+-->
+<resources>
+    <!-- Enable auxiliary cameras selector: the libcamera HAL exposes the
+         ultra-wide (2) and macro (3) cameras next to main (0) and front (1). -->
+    <bool name="config_enableAuxCameras">true</bool>
+</resources>

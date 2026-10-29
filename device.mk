@@ -64,6 +64,7 @@ PRODUCT_PACKAGES += \
 
 # Resource overlays, selected from the official LineageOS sm6250-common tree.
 PRODUCT_PACKAGES += \
+    CurtanaMLAperture \
     CurtanaMLFrameworks \
     CurtanaMLSettings \
     CurtanaMLSystemUI
