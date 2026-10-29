@@ -59,4 +59,6 @@ amplitude as level. perform() sends FF_PERIODIC/FF_CUSTOM with the Effect value
 in custom_data[0], like the QTI vibrator HAL of the official build; the driver
 plays the matching waveform of the AW8624 vendor library (`aw8624_haptic.bin`,
 loaded by the kernel from its ramdisk). Effects: click, double click, tick, thud,
-pop and heavy click, 30-40 ms as in the vendor configuration.
+pop and heavy click, 30-40 ms as in the vendor configuration. The light,
+medium and strong effect strengths use 25, 50 and 100 % of the waveform gain;
+the Settings overlay offers the three touch intensity levels.
