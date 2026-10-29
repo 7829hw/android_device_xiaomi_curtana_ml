@@ -62,3 +62,12 @@ loaded by the kernel from its ramdisk). Effects: click, double click, tick, thud
 pop and heavy click, 30-40 ms as in the vendor configuration. The light,
 medium and strong effect strengths use 25, 50 and 100 % of the waveform gain;
 the Settings overlay offers the three touch intensity levels.
+
+Camera (work in progress): the mainline CAMSS gives raw Bayer only, so the
+camera HAL is libcamera's generic Android camera3 HAL with the simple pipeline
+handler and the CPU software ISP, cross-built by `build_libcamera_android.sh`
+in android/lineage-tools (patches in `libcamera-patches/`) and loaded by the
+LineageOS AIDL camera provider. `camera/camera_hal.yaml` exposes main (0),
+front (1), ultra-wide (2) and macro (3); the Aperture overlay enables the lens
+selector. The back camera preview works; switching cameras, autofocus and the
+front preview are not finished.
