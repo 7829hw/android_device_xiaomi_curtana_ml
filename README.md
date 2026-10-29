@@ -53,6 +53,10 @@ from the serial number, not the factory one), the official sm6250 profile list
 without SIM access and software A2DP. The modem services are RAM-test builds
 from build_qcom_services_android.sh in android/lineage-tools.
 
-Vibrator: `vibrator/` is an IVibrator V2 HAL on the first input device with
-FF_RUMBLE (the 6.18 aw8695-haptics/drv2624 drivers through ff-memless). It
-supports on/off, amplitude and the tick/click/heavy-click/double-click effects.
+Vibrator: `vibrator/` is an IVibrator V2 HAL on the first force-feedback input
+device (the 6.18 aw8695-haptics driver). on/off play FF_CONSTANT with the
+amplitude as level. perform() sends FF_PERIODIC/FF_CUSTOM with the Effect value
+in custom_data[0], like the QTI vibrator HAL of the official build; the driver
+plays the matching waveform of the AW8624 vendor library (`aw8624_haptic.bin`,
+loaded by the kernel from its ramdisk). Effects: click, double click, tick, thud,
+pop and heavy click, 30-40 ms as in the vendor configuration.
