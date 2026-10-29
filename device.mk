@@ -47,6 +47,7 @@ TARGET_USES_VULKAN := true
 # Resource overlays, selected from the official LineageOS sm6250-common tree.
 PRODUCT_PACKAGES += \
     CurtanaMLFrameworks \
+    CurtanaMLSettings \
     CurtanaMLSystemUI
 
 # Storage and init

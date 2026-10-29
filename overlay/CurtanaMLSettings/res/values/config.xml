@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     SPDX-FileCopyrightText: The LineageOS Project
+     SPDX-License-Identifier: Apache-2.0
+-->
+<resources>
+    <!-- The vibrator HAL plays the vendor effects at the requested strength
+         (light, medium, strong), so offer low, medium and high intensity. -->
+    <integer name="config_vibration_supported_intensity_levels">3</integer>
+</resources>
