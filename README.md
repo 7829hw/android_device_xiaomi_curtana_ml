@@ -52,3 +52,7 @@ the AOSP Bluetooth HAL with the dragonboard set_bdaddr helper (address derived
 from the serial number, not the factory one), the official sm6250 profile list
 without SIM access and software A2DP. The modem services are RAM-test builds
 from build_qcom_services_android.sh in android/lineage-tools.
+
+Vibrator: `vibrator/` is an IVibrator V2 HAL on the first input device with
+FF_RUMBLE (the 6.18 aw8695-haptics/drv2624 drivers through ff-memless). It
+supports on/off, amplitude and the tick/click/heavy-click/double-click effects.
