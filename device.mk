@@ -143,6 +143,7 @@ PRODUCT_PACKAGES += \
     com.android.hardware.thermal \
     android.hardware.power-service.curtana_ml \
     android.hardware.light-service.lineage \
+    android.hardware.vibrator-service.curtana_ml \
     android.hardware.audio.service \
     android.hardware.audio@7.0-impl \
     android.hardware.audio.effect@7.0-impl \

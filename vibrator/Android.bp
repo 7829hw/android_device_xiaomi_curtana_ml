@@ -1,0 +1,20 @@
+//
+// SPDX-License-Identifier: Apache-2.0
+//
+// Vibrator HAL for mainline Linux haptics drivers that expose an input
+// device with FF_RUMBLE (curtana: AW8624 through aw8695-haptics, or DRV2624).
+//
+
+cc_binary {
+    name: "android.hardware.vibrator-service.curtana_ml",
+    relative_install_path: "hw",
+    init_rc: ["vibrator-curtana_ml.rc"],
+    vintf_fragments: ["vibrator-curtana_ml.xml"],
+    vendor: true,
+    srcs: ["Vibrator.cpp"],
+    shared_libs: [
+        "libbase",
+        "libbinder_ndk",
+        "android.hardware.vibrator-V2-ndk",
+    ],
+}
