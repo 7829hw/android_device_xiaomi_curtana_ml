@@ -44,6 +44,23 @@ PRODUCT_COPY_FILES += \
 
 TARGET_USES_VULKAN := true
 
+# Camera: the mainline CAMSS gives RDI raw Bayer only (no Qualcomm ISP driver),
+# so libcamera's simple pipeline handler with its software ISP produces the
+# frames. libcamera and its camera3 HAL (hw/camera.curtana_ml.so) are
+# cross-built with the NDK by build_libcamera_android.sh in
+# android/lineage-tools and unpacked to vendor/xiaomi/curtana_ml-libcamera; it
+# is not kept in Git. The LineageOS AIDL provider loads the HAL module.
+CURTANA_ML_LIBCAMERA := vendor/xiaomi/curtana_ml-libcamera
+PRODUCT_COPY_FILES += \
+    $(call find-copy-subdir-files,*,$(CURTANA_ML_LIBCAMERA)/lib64,$(TARGET_COPY_OUT_VENDOR)/lib64) \
+    $(call find-copy-subdir-files,*,$(CURTANA_ML_LIBCAMERA)/bin,$(TARGET_COPY_OUT_VENDOR)/bin) \
+    $(call find-copy-subdir-files,*,$(CURTANA_ML_LIBCAMERA)/share,$(TARGET_COPY_OUT_VENDOR)/share) \
+    frameworks/native/data/etc/android.hardware.camera.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.camera.xml \
+    frameworks/native/data/etc/android.hardware.camera.front.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.camera.front.xml
+
+PRODUCT_PACKAGES += \
+    android.hardware.camera.provider-service.lineage
+
 # Resource overlays, selected from the official LineageOS sm6250-common tree.
 PRODUCT_PACKAGES += \
     CurtanaMLFrameworks \
@@ -60,7 +77,7 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/init.curtana_ml.modem.rc:$(TARGET_COPY_OUT_VENDOR)/etc/init/init.curtana_ml.modem.rc \
     $(LOCAL_PATH)/curtana-efs-readonly.sh:$(TARGET_COPY_OUT_VENDOR)/bin/curtana-efs-readonly.sh \
     $(LOCAL_PATH)/curtana-adsp-start.sh:$(TARGET_COPY_OUT_VENDOR)/bin/curtana-adsp-start.sh \
-    $(DRAGONBOARD)/ueventd.common.rc:$(TARGET_COPY_OUT_VENDOR)/etc/ueventd.rc \
+    $(LOCAL_PATH)/ueventd.curtana_ml.rc:$(TARGET_COPY_OUT_VENDOR)/etc/ueventd.rc \
     frameworks/base/data/keyboards/Generic.kl:$(TARGET_COPY_OUT_VENDOR)/usr/keylayout/curtana_ml.kl
 
 # Firmware loaded by the 6.18 kernel (firmware_class.path=/vendor/firmware/).

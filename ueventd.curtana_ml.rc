@@ -1,0 +1,20 @@
+# From device/linaro/dragonboard/ueventd.common.rc, with the CAMSS camera
+# nodes for the libcamera HAL in the camera provider (cameraserver, camera).
+
+subsystem usbmisc
+    devname uevent_devname
+
+/dev/sw_sync              0660   root       graphics
+
+# gpu
+/dev/dri/card0 0660 system graphics
+/dev/dri/renderD128 0666 system graphics
+
+# media.codec2
+/dev/ion 0664 system system
+
+# CAMSS media graph: media controller, VFE video nodes, CSIPHY/CSID/VFE,
+# sensor and lens subdevices
+/dev/media*               0660   system     camera
+/dev/video*               0660   system     camera
+/dev/v4l-subdev*          0660   system     camera
